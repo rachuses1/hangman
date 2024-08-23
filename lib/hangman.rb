@@ -11,7 +11,7 @@ secret_word = dictionary[rand(dictionary.length - 1)]
 
 display = []
 secret_word.length.times {|i| display.push('_ ')}
-incorrect = ""
+incorrect = []
 
 
 def progress(secret_word, display, incorrect)
@@ -40,27 +40,15 @@ def progress(secret_word, display, incorrect)
     end
     
   else
-    incorrect << "#{guess}, "
+    incorrect << guess
+    if incorrect.length == 7
+      puts "Oh no, you're out of guesses!"
+    else
     progress(secret_word, display, incorrect)
+    end
   end
-  
-  # if secret_word.include?(guess) == false
-    
-  #   puts 'Incorrect word or letter. Please try again'
-  #   incorrect << guess
-  #   puts incorrect
 
-  #   progress(secret_word, display)
-  # elsif guess.length == 1 && secret_word.include?(guess)
-  #   display[secret_word.index(guess)] = "#{guess} "
-  #   progress(secret_word, display)
-  # end
 
 end
 
 progress(secret_word, display, incorrect)
-
-# input = gets.chomp
-# word = 'fat'
-# puts word << input
-# puts word
