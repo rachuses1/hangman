@@ -16,7 +16,8 @@ secret_word = dictionary[rand(dictionary.length - 1)]
 # randomly select a word between 5 and 12 in length.
 
 class Play
-  
+  attr_accessor :secret_word, :incorrect, :display
+
   def initialize(secret_word, incorrect, display)
     @secret_word = secret_word
     @incorrect = incorrect
@@ -37,7 +38,9 @@ class Play
 
     secret_array = @secret_word.split("")
 
-    if @secret_word.include?(guess)
+    if guess == "savegame"
+      to_yaml()
+    elsif @secret_word.include?(guess)
       secret_array.each_index{|index|
         if secret_array[index] == guess
           @display[index] = "#{guess} "
@@ -56,11 +59,25 @@ class Play
       if @incorrect.length == 7
         puts "Oh no, you're out of guesses!"
       else
-      progress()
+        puts @display.join
+        progress()
       end
     end
   end
 
+  def to_yaml
+    YAML.dump ({
+      :secret_word => @secret_word,
+      :incorrect => @incorrect,
+      :display => @display
+    })
+  end
+
+  def self.from_yaml(string)
+    data = YAML.load string
+    p data
+    self.new(data[:secret_word], data[:incorrect], data[:display])
+  end
 end
 
 show = Play.new(secret_word, incorrect, display)
