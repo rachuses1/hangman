@@ -1,0 +1,16 @@
+---
+:secret_word: struggle
+:incorrect:
+- q
+- w
+- z
+- x
+:display:
+- 's '
+- 't '
+- 'r '
+- '_ '
+- '_ '
+- '_ '
+- '_ '
+- 'e '

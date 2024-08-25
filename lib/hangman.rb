@@ -25,9 +25,23 @@ class Play
   end
 
   def start()
-    @secret_word.length.times {|i| @display.push('_ ')}
-    puts @display.join
-    progress()
+    if File.exist?("save.yaml")
+      puts "Would you like the load the previous game? y/n"
+      old_game = gets.chomp
+        if old_game == "y"
+          from_yaml()
+          puts @display.join
+          progress()
+        else
+          @secret_word.length.times {|i| @display.push('_ ')}
+          puts @display.join
+          progress()
+        end
+    else
+      @secret_word.length.times {|i| @display.push('_ ')}
+      puts @display.join
+      progress()
+    end
   end
 
   def progress()
@@ -46,6 +60,7 @@ class Play
           @display[index] = "#{guess} "
         end
       }
+
       if @display.join.gsub(" ", "") == @secret_word 
         puts @display.join
         puts "Yay! You have guessed the word!"
@@ -66,19 +81,26 @@ class Play
   end
 
   def to_yaml
-    YAML.dump ({
+    data = YAML.dump ({
       :secret_word => @secret_word,
       :incorrect => @incorrect,
       :display => @display
     })
+    if !File.exist?("save.yaml")
+      File.new("save.yaml", "w+")
+    end
+    File.write("save.yaml", data)
   end
 
-  def self.from_yaml(string)
-    data = YAML.load string
-    p data
-    self.new(data[:secret_word], data[:incorrect], data[:display])
+  def from_yaml
+    data = YAML.load_file("save.yaml")
+    @secret_word = data[:secret_word]
+    @incorrect = data[:incorrect] 
+    @display = data[:display] 
   end
 end
 
 show = Play.new(secret_word, incorrect, display)
 show.start()
+
+# show.from_yaml()
